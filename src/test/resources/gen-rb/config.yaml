@@ -1,0 +1,12 @@
+test:
+  protocol: 'compact'
+  transport: 'socket'
+  transport_wrapper: 'framed'
+  disconnect_exception_classes: ''
+  application_exception_classes: ''
+  size: 1
+  timeout: 2
+  multiplexed: false
+  client_class: 'Thrift::Test::TestService::Client'
+  test_on_borrow: false
+  servers: '127.0.0.1:9092'
