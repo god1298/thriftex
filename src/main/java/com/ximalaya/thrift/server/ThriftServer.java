@@ -14,7 +14,7 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
 
-import com.ximalaya.thrift.util.ThriftExtUtils;
+import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
  * Thrift Server wrapper a kind of {@link org.apache.thrift.server.TServer TServer}.
@@ -41,8 +41,8 @@ public class ThriftServer extends AbstractThriftServer {
             throw new IllegalArgumentException("hander class is null or empty!");
         }
         Class<?> handlerClass = this.handler.getClass();
-        Class<?> ifaceClazz = ThriftExtUtils.getIfaceClass(handlerClass);
-        Class<?> serviceClazz = ThriftExtUtils.getServiceClass(ifaceClazz);
+        Class<?> ifaceClazz = ThriftexUtils.getIfaceClass(handlerClass);
+        Class<?> serviceClazz = ThriftexUtils.getServiceClass(ifaceClazz);
         if (this.handlerInterface == null) {
             if (ifaceClazz == null) {
                 throw new IllegalArgumentException(
@@ -55,7 +55,7 @@ public class ThriftServer extends AbstractThriftServer {
                 throw new IllegalArgumentException(
                     "Service class is null and the system can't resovle it");
             }
-            this.processorClass = ThriftExtUtils.getProcessorClass(serviceClazz);
+            this.processorClass = ThriftexUtils.getProcessorClass(serviceClazz);
             if (this.processorClass == null) {
                 throw new IllegalArgumentException(
                     "Processor class is null and the system can't resovle it");

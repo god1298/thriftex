@@ -7,7 +7,7 @@ import java.lang.reflect.Proxy;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import com.ximalaya.thrift.util.ThriftExtUtils;
+import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
  * 与spring集成,代理业务方法,自动关闭连接
@@ -26,7 +26,7 @@ public class ThriftConnectionFactoryBean<T> implements FactoryBean<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T getObject() throws Exception {
-        return (T) Proxy.newProxyInstance(ThriftExtUtils.getCurrentClassLoader(),
+        return (T) Proxy.newProxyInstance(ThriftexUtils.getCurrentClassLoader(),
             new Class[] { iface }, new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

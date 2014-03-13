@@ -18,7 +18,7 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
 
-import com.ximalaya.thrift.util.ThriftExtUtils;
+import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
  * @author ted created on 2013-9-5
@@ -62,8 +62,8 @@ public class MultiplexedThriftServer extends AbstractThriftServer {
         for (int i = 0; i < handlers.size(); i++) {
             handler = handlers.get(i);
             Class<?> handlerClass = handler.getClass();
-            Class<?> ifaceClazz = ThriftExtUtils.getIfaceClass(handlerClass);
-            Class<?> serviceClazz = ThriftExtUtils.getServiceClass(ifaceClazz);
+            Class<?> ifaceClazz = ThriftexUtils.getIfaceClass(handlerClass);
+            Class<?> serviceClazz = ThriftexUtils.getServiceClass(ifaceClazz);
             if (this.handlerInterfaces.get(i) == null) {
                 if (ifaceClazz == null) {
                     throw new IllegalArgumentException(
@@ -76,7 +76,7 @@ public class MultiplexedThriftServer extends AbstractThriftServer {
                     throw new IllegalArgumentException(
                         "Service class is null and the system can't resovle it");
                 }
-                Class<TProcessor> processorClass = ThriftExtUtils.getProcessorClass(serviceClazz);
+                Class<TProcessor> processorClass = ThriftexUtils.getProcessorClass(serviceClazz);
                 if (processorClass == null) {
                     throw new IllegalArgumentException(
                         "Processor class is null and the system can't resovle it");
@@ -92,7 +92,7 @@ public class MultiplexedThriftServer extends AbstractThriftServer {
         for (int i = 0; i < handlers.size(); i++) {
             TProcessor processor = createProcessor(processorClasses.get(i),
                 handlerInterfaces.get(i), handlers.get(i));
-            Class<?> serviceClass = ThriftExtUtils.getServiceClass(handlerInterfaces.get(i));
+            Class<?> serviceClass = ThriftexUtils.getServiceClass(handlerInterfaces.get(i));
             multiplexedProcessor.registerProcessor(serviceClass.getSimpleName().toLowerCase()
                 .replace("service", ""), processor);
         }

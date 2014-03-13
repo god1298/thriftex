@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.ximalaya.thrift.client.exception.ThriftApplicationException;
 import com.ximalaya.thrift.client.exception.ThriftConnectionException;
 import com.ximalaya.thrift.client.exception.ThriftProtocolException;
-import com.ximalaya.thrift.util.ThriftExtUtils;
+import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
  * 提供对所有thrift业务接口的代理,处理某些污染连接的异常,并自动回收连接
@@ -30,7 +30,7 @@ public class ThriftInvocationHandler<T> implements InvocationHandler {
 
     public static <T> Object createProxy(T client, ThriftConnection<T> connection,
         Class<?> ifaceClass) {
-        return Proxy.newProxyInstance(ThriftExtUtils.getCurrentClassLoader(),
+        return Proxy.newProxyInstance(ThriftexUtils.getCurrentClassLoader(),
             new Class<?>[] { ifaceClass }, new ThriftInvocationHandler<T>(client, connection,
                 ifaceClass));
     }

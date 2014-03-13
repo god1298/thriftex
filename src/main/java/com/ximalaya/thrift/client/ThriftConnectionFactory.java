@@ -8,7 +8,7 @@ import com.ximalaya.thrift.ProtocolType;
 import com.ximalaya.thrift.client.internal.ConnectionFactoryImpl;
 import com.ximalaya.thrift.client.internal.ThriftConnectionPool;
 import com.ximalaya.thrift.util.Defaults;
-import com.ximalaya.thrift.util.ThriftExtUtils;
+import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
  * thrift连接的工厂类,用来生成{@link com.ximalaya.thrift.client.ThriftConnection ThriftConnection}实例
@@ -137,7 +137,7 @@ public class ThriftConnectionFactory<T> implements InitializingBean, DisposableB
     }
 
     private static <T> Class<?> getIfaceClass(Class<T> clientClass) {
-        Class<?> ifaceClass = ThriftExtUtils.getIfaceClass(clientClass);
+        Class<?> ifaceClass = ThriftexUtils.getIfaceClass(clientClass);
         if (ifaceClass == null) {
             throw new IllegalArgumentException("Can't find Iface interface from the client: "
                 + clientClass + ", please check the version of thrift");

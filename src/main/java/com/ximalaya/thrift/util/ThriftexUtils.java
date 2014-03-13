@@ -1,5 +1,5 @@
 /*
- * 文件名称: ThriftExtUtils.java Copyright 2011-2013 Nali All right reserved.
+ * 文件名称: ThriftexUtils.java Copyright 2011-2013 Nali All right reserved.
  */
 package com.ximalaya.thrift.util;
 
@@ -15,8 +15,8 @@ import org.springframework.util.ClassUtils;
  * @author gavin lu
  * @since 1.0
  */
-public final class ThriftExtUtils {
-    private ThriftExtUtils() {
+public final class ThriftexUtils {
+    private ThriftexUtils() {
     }
 
     /**
@@ -79,7 +79,7 @@ public final class ThriftExtUtils {
         } catch (Throwable ex) {
         }
         if (cl == null) {
-            cl = ThriftExtUtils.class.getClassLoader();
+            cl = ThriftexUtils.class.getClassLoader();
         }
         if (cl == null) {
             cl = ClassLoader.getSystemClassLoader();
