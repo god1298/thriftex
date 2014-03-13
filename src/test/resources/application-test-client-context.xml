@@ -26,11 +26,17 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="testServiceClientFactory" class="com.ximalaya.thrift.client.ThriftConnectionFactory">
+	<bean id="clientConfig" class="com.ximalaya.thrift.client.ClientConfig">
 		<property name="clientClass" value="com.ximalaya.thrift.test.TestService.Client"></property>
 		<property name="host" value="127.0.0.1"></property>
 		<property name="port" value="9092"></property>
-		<property name="soTimeout" value="1000"></property>
+		<property name="timeout" value="1000"></property>
+		<property name="protocolType" value="compact"></property>
+		<property name="framed" value="true"></property>
+		<property name="multiplexed" value="false"></property>
+	</bean>
+	<bean id="testServiceClientFactory" class="com.ximalaya.thrift.client.ThriftConnectionFactory">
+		<property name="clientConfig" ref="clientConfig"></property>
 		<property name="thriftClientPoolConfig">
 			<bean class="com.ximalaya.thrift.client.ThriftConnectionPoolConfig">
 				<property name="maxActive" value="10"></property>
@@ -39,7 +45,7 @@
 				<property name="maxWait" value="10"></property>
 			</bean>
 		</property>
-		<property name="protocolType" value="compact"></property>
+
 	</bean>
 
 	<bean id="testhandler" class="com.ximalaya.thrift.test.TestServiceHandler"></bean>

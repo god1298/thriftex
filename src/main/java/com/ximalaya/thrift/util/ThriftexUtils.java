@@ -86,4 +86,10 @@ public final class ThriftexUtils {
         }
         return cl;
     }
+
+    public static String getServiceName(Class<?> ifaceClass) {
+        Class<?> serviceClass = ThriftexUtils.getServiceClass(ifaceClass);
+        String serviceName = serviceClass.getSimpleName().toLowerCase().replace("service", "");
+        return serviceName;
+    }
 }

@@ -4,10 +4,8 @@ import org.apache.thrift.TServiceClient;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.ximalaya.thrift.ProtocolType;
 import com.ximalaya.thrift.client.internal.ConnectionFactoryImpl;
 import com.ximalaya.thrift.client.internal.ThriftConnectionPool;
-import com.ximalaya.thrift.util.Defaults;
 import com.ximalaya.thrift.util.ThriftexUtils;
 
 /**
@@ -19,70 +17,16 @@ import com.ximalaya.thrift.util.ThriftexUtils;
  * @since 1.0
  */
 public class ThriftConnectionFactory<T> implements InitializingBean, DisposableBean {
-    private Class<T> clientClass; // which client this factory created
-    private Class<?> ifaceClass;
-    private boolean framed = Defaults.DEFAULT_FRAMED;// whether or not use TFramedTransport
-    private ProtocolType protocolType = Defaults.DEFAULT_PROTOCOL_TYPE;
-    private String host = Defaults.DEFAULT_HOST;
-    private int port = Defaults.DEFAULT_PORT;
-    private int soTimeout = Defaults.DEFAULT_SOTIMEOUT;
     private ThriftConnectionPoolConfig thriftConnectionPoolConfig = new ThriftConnectionPoolConfig();
     private ThriftConnectionPool<T> thriftConnectionPool;
+    private ClientConfig<T> clientConfig;
 
-    public Class<T> getClientClass() {
-        return clientClass;
+    public ClientConfig<T> getClientConfig() {
+        return clientConfig;
     }
 
-    public void setClientClass(Class<T> clientClass) {
-        this.clientClass = clientClass;
-    }
-
-    public Class<?> getIfaceClass() {
-        return ifaceClass;
-    }
-
-    public void setIfaceClass(Class<?> ifaceClass) {
-        this.ifaceClass = ifaceClass;
-    }
-
-    public boolean isFramed() {
-        return framed;
-    }
-
-    public void setFramed(boolean framed) {
-        this.framed = framed;
-    }
-
-    public ProtocolType getProtocolType() {
-        return protocolType;
-    }
-
-    public void setProtocolType(ProtocolType protocolType) {
-        this.protocolType = protocolType;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getSoTimeout() {
-        return soTimeout;
-    }
-
-    public void setSoTimeout(int soTimeout) {
-        this.soTimeout = soTimeout;
+    public void setClientConfig(ClientConfig<T> clientConfig) {
+        this.clientConfig = clientConfig;
     }
 
     public ThriftConnection<T> getConnection() {
@@ -111,16 +55,17 @@ public class ThriftConnectionFactory<T> implements InitializingBean, DisposableB
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (this.clientClass == null) {
+        if (clientConfig.getClientClass() == null) {
             throw new IllegalArgumentException("Thrift client class is null");
         }
-        if (this.clientClass.isAssignableFrom(TServiceClient.class)) {
-            throw new IllegalArgumentException("Thrift client class: " + clientClass
-                + " not extends " + TServiceClient.class);
+        if (clientConfig.getClientClass().isAssignableFrom(TServiceClient.class)) {
+            throw new IllegalArgumentException("Thrift client class: "
+                + clientConfig.getClientClass() + " not extends " + TServiceClient.class);
         }
-        this.ifaceClass = checkAndGetIfaceClass(clientClass, ifaceClass);
-        ConnectionFactoryImpl<T> thriftGenericClientFactory = new ConnectionFactoryImpl<T>(host, port,
-            soTimeout, clientClass, ifaceClass, framed, protocolType, thriftConnectionPoolConfig);
+        clientConfig.setIfaceClass(checkAndGetIfaceClass(clientConfig.getClientClass(),
+            clientConfig.getIfaceClass()));
+        ConnectionFactoryImpl<T> thriftGenericClientFactory = new ConnectionFactoryImpl<T>(
+            clientConfig, thriftConnectionPoolConfig);
         this.thriftConnectionPool = thriftGenericClientFactory.getThriftGenericClientPool();
     }
 

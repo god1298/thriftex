@@ -5,7 +5,7 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
-import com.ximalaya.thrift.ProtocolType;
+import com.ximalaya.thrift.client.ClientConfig;
 import com.ximalaya.thrift.client.ThriftConnection;
 
 /**
@@ -16,67 +16,18 @@ import com.ximalaya.thrift.client.ThriftConnection;
  * @since 1.0
  */
 abstract class AbstractConnectionFactory<T> extends BasePoolableObjectFactory {
-    protected boolean framed;
-    protected ProtocolType protocolType;
-    protected String host;
-    protected int port;
-    protected int soTimeout;
+    protected ClientConfig<T> clientConfig;
 
     public AbstractConnectionFactory() {
     }
 
-    public AbstractConnectionFactory(String host, int port, int soTimeout, boolean framed,
-        ProtocolType protocolType) {
-        this.host = host;
-        this.port = port;
-        this.framed = framed;
-        this.protocolType = protocolType;
-        this.soTimeout = soTimeout;
-    }
-
-    public boolean isFramedTransport() {
-        return framed;
-    }
-
-    public void setFramedTransport(boolean framedTransport) {
-        this.framed = framedTransport;
-    }
-
-    public String getProtocolType() {
-        return protocolType.name();
-    }
-
-    public void setProtocolType(String protocolType) {
-        this.protocolType = ProtocolType.valueOf(protocolType);
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getSoTimeout() {
-        return soTimeout;
-    }
-
-    public void setSoTimeout(int soTimeout) {
-        this.soTimeout = soTimeout;
+    public AbstractConnectionFactory(ClientConfig<T> clientConfig) {
+        this.clientConfig = clientConfig;
     }
 
     protected TTransport createTransport(String host, int port, int timeout) throws Exception {
         TTransport transport = null;
-        if (framed) {
+        if (clientConfig.isFramed()) {
             transport = new TFramedTransport(new TSocket(host, port, timeout));
         } else {
             transport = new TSocket(host, port, timeout);
@@ -100,5 +51,13 @@ abstract class AbstractConnectionFactory<T> extends BasePoolableObjectFactory {
             return ((ThriftConnection<T>) o).isOpen();
         }
         return false;
+    }
+
+    public ClientConfig<T> getClientConfig() {
+        return clientConfig;
+    }
+
+    public void setClientConfig(ClientConfig<T> clientConfig) {
+        this.clientConfig = clientConfig;
     }
 }

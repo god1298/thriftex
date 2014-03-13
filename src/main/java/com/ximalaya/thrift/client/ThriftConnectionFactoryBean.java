@@ -18,9 +18,8 @@ import com.ximalaya.thrift.util.ThriftexUtils;
  * @author ted
  * @since 1.0
  */
-@Deprecated
 public class ThriftConnectionFactoryBean<T> implements FactoryBean<T> {
-    private ThriftConnectionFactory<?> clientFactory;
+    private ThriftConnectionFactory<T> clientFactory;
     private Class<?> iface;
 
     @SuppressWarnings("unchecked")
@@ -53,8 +52,8 @@ public class ThriftConnectionFactoryBean<T> implements FactoryBean<T> {
         return true;
     }
 
-    public void setClientFactory(ThriftConnectionFactory<?> clientFactory) {
+    public void setClientFactory(ThriftConnectionFactory<T> clientFactory) {
         this.clientFactory = clientFactory;
-        this.iface = clientFactory.getIfaceClass();
+        this.iface = clientFactory.getClientConfig().getIfaceClass();
     }
 }

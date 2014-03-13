@@ -92,60 +92,59 @@ public class MultiplexedThriftServer extends AbstractThriftServer {
         for (int i = 0; i < handlers.size(); i++) {
             TProcessor processor = createProcessor(processorClasses.get(i),
                 handlerInterfaces.get(i), handlers.get(i));
-            Class<?> serviceClass = ThriftexUtils.getServiceClass(handlerInterfaces.get(i));
-            multiplexedProcessor.registerProcessor(serviceClass.getSimpleName().toLowerCase()
-                .replace("service", ""), processor);
+            String serviceName = ThriftexUtils.getServiceName(handlerInterfaces.get(i));
+            multiplexedProcessor.registerProcessor(serviceName, processor);
         }
         TProtocolFactory factory = createProtocolFactory();
         switch (serverType) {
-        case threadselected:
-            org.apache.thrift.server.TThreadedSelectorServer.Args threadSelectedArgs = new org.apache.thrift.server.TThreadedSelectorServer.Args(
-                (TNonblockingServerTransport) transport);
-            threadSelectedArgs.protocolFactory(factory);
-            threadSelectedArgs.processor(multiplexedProcessor);
-            threadSelectedArgs.workerThreads(workerSize);
-            threadSelectedArgs.selectorThreads(selectorSize);
-            TTransportFactory threadSelectedTransportFactory = new TFramedTransport.Factory();
-            threadSelectedArgs.transportFactory(threadSelectedTransportFactory);
-            server = new TThreadedSelectorServer(threadSelectedArgs);
-            break;
-        case hsha:
-            org.apache.thrift.server.THsHaServer.Args hshaArgs = new org.apache.thrift.server.THsHaServer.Args(
-                (TNonblockingServerTransport) transport);
-            hshaArgs.protocolFactory(factory);
-            hshaArgs.processor(multiplexedProcessor);
-            hshaArgs.workerThreads(workerSize);
-            TTransportFactory hshaTransportFactory = new TFramedTransport.Factory();
-            hshaArgs.transportFactory(hshaTransportFactory);
-            server = new THsHaServer(hshaArgs);
-            break;
-        case nonblocking:
-            org.apache.thrift.server.TNonblockingServer.Args nonblockingArgs = new org.apache.thrift.server.TNonblockingServer.Args(
-                (TNonblockingServerTransport) transport);
-            nonblockingArgs.protocolFactory(factory);
-            nonblockingArgs.processor(multiplexedProcessor);
-            TTransportFactory nonblockingTransportFactory = new TFramedTransport.Factory();
-            nonblockingArgs.transportFactory(nonblockingTransportFactory);
-            server = new TNonblockingServer(nonblockingArgs);
-            break;
-        case threadpool:
-            org.apache.thrift.server.TThreadPoolServer.Args threadPoolArgs = new org.apache.thrift.server.TThreadPoolServer.Args(
-                transport);
-            threadPoolArgs.protocolFactory(factory);
-            threadPoolArgs.processor(multiplexedProcessor);
-            threadPoolArgs.maxWorkerThreads(workerSize);
-            threadPoolArgs.minWorkerThreads(workerSize);
-            server = new TThreadPoolServer(threadPoolArgs);
-            break;
-        case simple:
-            org.apache.thrift.server.TSimpleServer.Args simpleArgs = new org.apache.thrift.server.TSimpleServer.Args(
-                transport);
-            simpleArgs.protocolFactory(factory);
-            simpleArgs.processor(multiplexedProcessor);
-            server = new TSimpleServer(simpleArgs);
-            break;
-        default:
-            throw new IllegalArgumentException("Unknow server type " + serverType);
+            case threadselected:
+                org.apache.thrift.server.TThreadedSelectorServer.Args threadSelectedArgs = new org.apache.thrift.server.TThreadedSelectorServer.Args(
+                    (TNonblockingServerTransport) transport);
+                threadSelectedArgs.protocolFactory(factory);
+                threadSelectedArgs.processor(multiplexedProcessor);
+                threadSelectedArgs.workerThreads(workerSize);
+                threadSelectedArgs.selectorThreads(selectorSize);
+                TTransportFactory threadSelectedTransportFactory = new TFramedTransport.Factory();
+                threadSelectedArgs.transportFactory(threadSelectedTransportFactory);
+                server = new TThreadedSelectorServer(threadSelectedArgs);
+                break;
+            case hsha:
+                org.apache.thrift.server.THsHaServer.Args hshaArgs = new org.apache.thrift.server.THsHaServer.Args(
+                    (TNonblockingServerTransport) transport);
+                hshaArgs.protocolFactory(factory);
+                hshaArgs.processor(multiplexedProcessor);
+                hshaArgs.workerThreads(workerSize);
+                TTransportFactory hshaTransportFactory = new TFramedTransport.Factory();
+                hshaArgs.transportFactory(hshaTransportFactory);
+                server = new THsHaServer(hshaArgs);
+                break;
+            case nonblocking:
+                org.apache.thrift.server.TNonblockingServer.Args nonblockingArgs = new org.apache.thrift.server.TNonblockingServer.Args(
+                    (TNonblockingServerTransport) transport);
+                nonblockingArgs.protocolFactory(factory);
+                nonblockingArgs.processor(multiplexedProcessor);
+                TTransportFactory nonblockingTransportFactory = new TFramedTransport.Factory();
+                nonblockingArgs.transportFactory(nonblockingTransportFactory);
+                server = new TNonblockingServer(nonblockingArgs);
+                break;
+            case threadpool:
+                org.apache.thrift.server.TThreadPoolServer.Args threadPoolArgs = new org.apache.thrift.server.TThreadPoolServer.Args(
+                    transport);
+                threadPoolArgs.protocolFactory(factory);
+                threadPoolArgs.processor(multiplexedProcessor);
+                threadPoolArgs.maxWorkerThreads(workerSize);
+                threadPoolArgs.minWorkerThreads(workerSize);
+                server = new TThreadPoolServer(threadPoolArgs);
+                break;
+            case simple:
+                org.apache.thrift.server.TSimpleServer.Args simpleArgs = new org.apache.thrift.server.TSimpleServer.Args(
+                    transport);
+                simpleArgs.protocolFactory(factory);
+                simpleArgs.processor(multiplexedProcessor);
+                server = new TSimpleServer(simpleArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknow server type " + serverType);
         }
     }
 }
