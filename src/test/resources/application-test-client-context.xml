@@ -45,7 +45,6 @@
 				<property name="maxWait" value="10"></property>
 			</bean>
 		</property>
-
 	</bean>
 
 	<bean id="testhandler" class="com.ximalaya.thrift.test.TestServiceHandler"></bean>
